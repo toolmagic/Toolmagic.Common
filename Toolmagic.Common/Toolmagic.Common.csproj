@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D89B2166-166E-481A-B82B-C3098CA33988}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Toolmagic.Common</RootNamespace>
+    <AssemblyName>Toolmagic.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.3.2.0\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\packages\Common.Logging.Core.3.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppInfo.cs" />
+    <Compile Include="Argument.cs" />
+    <Compile Include="Block.cs" />
+    <Compile Include="Collections\CollectionExtension.cs" />
+    <Compile Include="Collections\IMultiKeyDictionary.cs" />
+    <Compile Include="Collections\MultiKeyDictionary.cs" />
+    <Compile Include="Console\ArgumentBuilder.cs" />
+    <Compile Include="Console\CommandList.cs" />
+    <Compile Include="Console\EntryPoint.cs" />
+    <Compile Include="Console\ICommand.cs" />
+    <Compile Include="Console\IncorrectUsageException.cs" />
+    <Compile Include="Console\ReturnCode.cs" />
+    <Compile Include="FinallyBlock.cs" />
+    <Compile Include="FinallyBlockGeneric.cs" />
+    <Compile Include="IO\CachingStream.cs" />
+    <Compile Include="IO\ExpandableBuffer.cs" />
+    <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="IO\FileSystemExtensions.cs" />
+    <Compile Include="IO\IConsole.cs" />
+    <Compile Include="IO\IFileSystem.cs" />
+    <Compile Include="IO\SystemConsole.cs" />
+    <Compile Include="IO\TempFolder.cs" />
+    <Compile Include="NotEmpty.cs" />
+    <Compile Include="NotNull.cs" />
+    <Compile Include="Presentation\MultiValueConverter.cs" />
+    <Compile Include="Presentation\ValueConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shell\FileAssociation.cs" />
+    <Compile Include="Shell\OpenRegistryKeyException.cs" />
+    <Compile Include="Tasks\ConsoleTask.cs" />
+    <Compile Include="Tasks\IHierarchicalQueue.cs" />
+    <Compile Include="Tasks\InterlockedCounter.cs" />
+    <Compile Include="Tasks\LimitedHierarchicalQueue.cs" />
+    <Compile Include="Tasks\ParallelTask.cs" />
+    <Compile Include="Tasks\PeriodicTask.cs" />
+    <Compile Include="Tasks\SearchTask.cs" />
+    <Compile Include="Tasks\SearchTaskOptions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
