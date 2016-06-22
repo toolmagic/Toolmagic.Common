@@ -52,7 +52,7 @@ namespace Toolmagic.Common.IO
 
 			var rootApplicationFolder = Path.Combine(fileSystem.GetTempPath(), applicationKey);
 
-			if (!Directory.Exists(rootApplicationFolder))
+			if (!fileSystem.DirectoryExists(rootApplicationFolder))
 			{
 				return;
 			}

@@ -3,6 +3,7 @@ using Microsoft.Win32;
 
 namespace Toolmagic.Common.Shell
 {
+	[Serializable]
 	public sealed class OpenRegistryKeyException : Exception
 	{
 		public OpenRegistryKeyException(RegistryKey parentKey, string childKeyName)

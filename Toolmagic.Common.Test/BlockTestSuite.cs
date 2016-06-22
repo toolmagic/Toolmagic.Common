@@ -10,7 +10,7 @@ namespace Toolmagic.Common.Test
 		[Test]
 		public void TryFinallyWithResultFailsOnFinallyBlockTest()
 		{
-			Assert.Throws<AccessViolationException>
+			Assert.Throws<TestException>
 				(
 					() =>
 					{
@@ -21,7 +21,7 @@ namespace Toolmagic.Common.Test
 							)
 							.Finally
 							(
-								() => { throw new AccessViolationException(); }
+								() => { throw new TestException(); }
 							);
 					});
 		}
@@ -87,24 +87,24 @@ namespace Toolmagic.Common.Test
 								{
 									if (expected.Contains("est")) // to avoid compiler warnings
 									{
-										throw new NotSupportedException();
+										throw new TestException();
 									}
 									return expected;
 								}
 							)
 							.Finally
 							(
-								() => { throw new AccessViolationException(); }
+								() => { throw new Test2Exception(); }
 							);
 					});
-			Assert.IsInstanceOf<NotSupportedException>(exception.InnerExceptions.First());
-			Assert.IsInstanceOf<AccessViolationException>(exception.InnerExceptions.Last());
+			Assert.IsInstanceOf<TestException>(exception.InnerExceptions.First());
+			Assert.IsInstanceOf<Test2Exception>(exception.InnerExceptions.Last());
 		}
 
 		[Test]
 		public void TryFinallyWithResultFailsOnTryBlockTest()
 		{
-			Assert.Throws<AccessViolationException>
+			Assert.Throws<TestException>
 				(
 					() =>
 					{
@@ -120,7 +120,7 @@ namespace Toolmagic.Common.Test
 									{
 										if (expected.Contains("est")) // to avoid compiler warnings
 										{
-											throw new AccessViolationException();
+											throw new TestException();
 										}
 										return expected;
 									}

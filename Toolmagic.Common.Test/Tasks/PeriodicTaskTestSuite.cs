@@ -91,7 +91,7 @@ namespace Toolmagic.Common.Test.Tasks
 						PeriodicTask
 							.StartNew
 							(
-								() => { throw new DivideByZeroException(); },
+								() => { throw new TestException(); },
 								TimeSpan.FromMilliseconds(10),
 								cancellationTokenSource.Token
 							)
@@ -101,7 +101,7 @@ namespace Toolmagic.Common.Test.Tasks
 
 			var exception = aggregateException.InnerExceptions.FirstOrDefault();
 			Assert.IsNotNull(exception);
-			Assert.IsInstanceOf<DivideByZeroException>(exception);
+			Assert.IsInstanceOf<TestException>(exception);
 		}
 	}
 }

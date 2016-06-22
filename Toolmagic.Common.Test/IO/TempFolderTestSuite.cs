@@ -32,6 +32,20 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
+		public void TempFolderCleansNonexistentFolderTest()
+		{
+			var fileSystem = MockRepository.GenerateStrictMock<IFileSystem>();
+
+			var tempFolder = Path.GetTempPath();
+			var appTempFolder = Path.Combine(tempFolder, AppKey);
+
+			fileSystem.Stub(f => f.GetTempPath()).Return(tempFolder);
+			fileSystem.Stub(f => f.DirectoryExists(appTempFolder)).Return(false);
+
+			TempFolder.CleanFolder(fileSystem, AppKey);
+		}
+
+		[Test]
 		public void TempFolderCleanTest()
 		{
 			var fileSystem = MockRepository.GenerateStrictMock<IFileSystem>();
@@ -53,6 +67,7 @@ namespace Toolmagic.Common.Test.IO
 			};
 
 			fileSystem.Stub(f => f.GetTempPath()).Return(tempFolder);
+			fileSystem.Stub(f => f.DirectoryExists(appTempFolder)).Return(true);
 
 			fileSystem
 				.Stub(f => f.EnumerateFileSystemEntries(appTempFolder, "*.*", SearchOption.AllDirectories))

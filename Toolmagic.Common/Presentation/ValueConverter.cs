@@ -8,7 +8,10 @@ namespace Toolmagic.Common.Presentation
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (targetType != typeof (TTarget) && !targetType.IsSubclassOf(typeof (TTarget)))
+			Argument.IsNotNull(targetType, nameof(targetType));
+			Argument.IsNotNull(culture, nameof(culture));
+
+			if (targetType != typeof(TTarget) && !typeof(TTarget).IsSubclassOf(targetType))
 			{
 				return null;
 			}
@@ -18,7 +21,10 @@ namespace Toolmagic.Common.Presentation
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (targetType != typeof (TSource) && !targetType.IsSubclassOf(typeof (TSource)))
+			Argument.IsNotNull(targetType, nameof(targetType));
+			Argument.IsNotNull(culture, nameof(culture));
+
+			if (targetType != typeof(TSource) && !typeof(TTarget).IsSubclassOf(targetType))
 			{
 				return null;
 			}

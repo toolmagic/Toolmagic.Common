@@ -67,7 +67,7 @@ namespace Toolmagic.Common.Test.Tasks
 		}
 
 		[Test]
-		public void ConsoleTaskFailsOnNullAction()
+		public void ConsoleTaskFailsOnNullActionTest()
 		{
 			const Action<CancellationToken> nullExecuteAction = null;
 			var cancelKey = new ConsoleKeyInfo();
@@ -89,7 +89,7 @@ namespace Toolmagic.Common.Test.Tasks
 		}
 
 		[Test]
-		public void ConsoleTaskFailsOnNullConsole()
+		public void ConsoleTaskFailsOnNullConsoleTest()
 		{
 			Action<CancellationToken> executeAction = cancellationToken => { };
 			var cancelKey = new ConsoleKeyInfo();

@@ -11,19 +11,19 @@ namespace Toolmagic.Common.Test.IO
 	[TestFixture]
 	public sealed class FileSystemExtensionsTest
 	{
-		private static IEnumerable TestDataForIsDirectoryEmpty
+		private static IEnumerable IsDirectoryEmptyTestData
 		{
 			get
 			{
-				yield return new TestCaseData("C:\\temp", true, new[] {"C:\\temp\\file1"}).Returns(false);
-				yield return new TestCaseData("C:\\temp", true, new string[0]).Returns(true);
-				yield return new TestCaseData("C:\\blabla", false, new string[0]).Returns(typeof (DirectoryNotFoundException));
-				yield return new TestCaseData(string.Empty, false, new string[0]).Returns(typeof (ArgumentException));
-				yield return new TestCaseData(null, false, new string[0]).Returns(typeof (ArgumentNullException));
+				yield return new TestCaseData(@"C:\temp", true, new[] {@"C:\temp\file1"}).Returns(false);
+				yield return new TestCaseData(@"C:\temp", true, new string[] {}).Returns(true);
+				yield return new TestCaseData(@"C:\blabla", false, new string[] {}).Returns(typeof(DirectoryNotFoundException));
+				yield return new TestCaseData(string.Empty, false, new string[] {}).Returns(typeof(ArgumentException));
+				yield return new TestCaseData(null, false, new string[] {}).Returns(typeof(ArgumentNullException));
 			}
 		}
 
-		[TestCaseSource(nameof(TestDataForIsDirectoryEmpty))]
+		[TestCaseSource(nameof(IsDirectoryEmptyTestData))]
 		public object IsDirectoryEmptyTest(string path, bool isDirectoryExists, IEnumerable<string> entries)
 		{
 			var fileSystem = MockRepository.GenerateStrictMock<IFileSystem>();

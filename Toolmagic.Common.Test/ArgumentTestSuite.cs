@@ -8,8 +8,8 @@ namespace Toolmagic.Common.Test
 	{
 		[TestCase(100, 100, ExpectedResult = true)]
 		[TestCase(0, 0, ExpectedResult = true)]
-		[TestCase(-1, 0, ExpectedResult = typeof (ArgumentException))]
-		[TestCase(99, 100, ExpectedResult = typeof (ArgumentException))]
+		[TestCase(-1, 0, ExpectedResult = typeof(ArgumentException))]
+		[TestCase(99, 100, ExpectedResult = typeof(ArgumentException))]
 		public object ArgumentAreEqualInt64Test(long a, long b)
 		{
 			try
@@ -26,9 +26,9 @@ namespace Toolmagic.Common.Test
 		[TestCase("100", "100", ExpectedResult = true)]
 		[TestCase("", "", ExpectedResult = true)]
 		[TestCase(null, null, ExpectedResult = true)]
-		[TestCase(null, "", ExpectedResult = typeof (ArgumentException))]
-		[TestCase("", "111", ExpectedResult = typeof (ArgumentException))]
-		[TestCase("100", "99", ExpectedResult = typeof (ArgumentException))]
+		[TestCase(null, "", ExpectedResult = typeof(ArgumentException))]
+		[TestCase("", "111", ExpectedResult = typeof(ArgumentException))]
+		[TestCase("100", "99", ExpectedResult = typeof(ArgumentException))]
 		public object ArgumentAreEqualStringTest(string a, string b)
 		{
 			try
@@ -51,7 +51,7 @@ namespace Toolmagic.Common.Test
 					{
 						var value = int.MaxValue;
 
-						Argument.IsInRange(value, "argument", 0, 1000);
+						Argument.IsInRange(value, @"argument", 0, 1000);
 					}
 				);
 			Assert.AreEqual(@"argument", exception.ParamName);
@@ -66,7 +66,7 @@ namespace Toolmagic.Common.Test
 					{
 						var value = -10;
 
-						Argument.IsInRange(value, "argument", 0, 1000);
+						Argument.IsInRange(value, @"argument", 0, 1000);
 					}
 				);
 			Assert.AreEqual(@"argument", exception.ParamName);
@@ -77,7 +77,7 @@ namespace Toolmagic.Common.Test
 		{
 			var value = 100;
 
-			Argument.IsInRange(value, "value", 0, 1000);
+			Argument.IsInRange(value, @"value", 0, 1000);
 		}
 
 		[Test]
@@ -85,7 +85,7 @@ namespace Toolmagic.Common.Test
 		{
 			var exception = Assert.Throws<ArgumentException>
 				(
-					() => { Argument.IsNotEmpty(string.Empty, "argument"); }
+					() => { Argument.IsNotEmpty(string.Empty, @"argument"); }
 				);
 			Assert.AreEqual(@"argument", exception.ParamName);
 		}
@@ -105,7 +105,7 @@ namespace Toolmagic.Common.Test
 		{
 			var exception = Assert.Throws<ArgumentNullException>
 				(
-					() => { Argument.IsNotEmpty(null, "argument"); }
+					() => { Argument.IsNotEmpty(null, @"argument"); }
 				);
 			Assert.AreEqual(@"argument", exception.ParamName);
 		}
@@ -115,7 +115,7 @@ namespace Toolmagic.Common.Test
 		{
 			var exception = Assert.Throws<ArgumentException>
 				(
-					() => { Argument.IsNotEmpty("   ", "argument"); }
+					() => { Argument.IsNotEmpty("   ", @"argument"); }
 				);
 			Assert.AreEqual(@"argument", exception.ParamName);
 		}
@@ -176,7 +176,7 @@ namespace Toolmagic.Common.Test
 		{
 			var argument = new object();
 
-			var notNullArgument = Argument.IsNotNull(argument, "argument");
+			var notNullArgument = Argument.IsNotNull(argument, @"argument");
 
 			Assert.AreEqual(argument, notNullArgument.Value);
 		}

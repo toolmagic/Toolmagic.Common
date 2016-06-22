@@ -10,14 +10,14 @@ namespace Toolmagic.Common.Test.IO
 	{
 		private byte[] GetInternalBuffer(ExpandableBuffer expandableBuffer)
 		{
-			var bufferFieldInfo = typeof (ExpandableBuffer).GetField("_buffer", BindingFlags.NonPublic | BindingFlags.Instance);
+			var bufferFieldInfo = typeof(ExpandableBuffer).GetField("_buffer", BindingFlags.NonPublic | BindingFlags.Instance);
 			Assert.IsNotNull(bufferFieldInfo);
 
 			return (byte[]) bufferFieldInfo.GetValue(expandableBuffer);
 		}
 
 		[Test]
-		public void AddRangeIncreasesCapacityToTwoTimesWithFillFactor05()
+		public void AddRangeIncreasesCapacityToTwoTimesWithFillFactor05Test()
 		{
 			// Arrange
 			var buffer = new ExpandableBuffer(0.5);
@@ -37,13 +37,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CreateExpandableBuffer()
-		{
-			Assert.IsNotNull(new ExpandableBuffer());
-		}
-
-		[Test]
-		public void CreateExpandableBufferFailsWithNegativeFillFactor()
+		public void CreateExpandableBufferFailsWithNegativeFillFactorTest()
 		{
 			var exception = Assert.Throws<ArgumentOutOfRangeException>
 				(
@@ -54,7 +48,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CreateExpandableBufferFailsWithTooLargeFillFactor()
+		public void CreateExpandableBufferFailsWithTooLargeFillFactorTest()
 		{
 			var exception = Assert.Throws<ArgumentOutOfRangeException>
 				(
@@ -65,7 +59,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CreateExpandableBufferFailsWithZeroFillFactor()
+		public void CreateExpandableBufferFailsWithZeroFillFactorTest()
 		{
 			var exception = Assert.Throws<ArgumentOutOfRangeException>
 				(
@@ -76,19 +70,25 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CreateExpandableBufferWith100PercentsFillFactor()
+		public void CreateExpandableBufferTest()
+		{
+			Assert.IsNotNull(new ExpandableBuffer());
+		}
+
+		[Test]
+		public void CreateExpandableBufferWith100PercentsFillFactorTest()
 		{
 			Assert.IsNotNull(new ExpandableBuffer(1));
 		}
 
 		[Test]
-		public void CreateExpandableBufferWithFillFactor()
+		public void CreateExpandableBufferWithFillFactorTest()
 		{
 			Assert.IsNotNull(new ExpandableBuffer(0.8));
 		}
 
 		[Test]
-		public void ExpandableBufferCleans()
+		public void ExpandableBufferCleansTest()
 		{
 			var buffer = new ExpandableBuffer();
 			var tempBuffer = new byte[] {1, 2, 3, 4, 5, 6, 7};
@@ -101,7 +101,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void ExpandableBufferFailsToAddRangeWithLengthGreaterThanBufferLength()
+		public void ExpandableBufferFailsToAddRangeWithLengthGreaterThanBufferLengthTest()
 		{
 			var buffer = new ExpandableBuffer();
 			var tempBuffer = new byte[] {1, 2, 3, 4, 5, 6, 7};
@@ -118,7 +118,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void ExpandableBufferFailsToAddRangeWithNegativeLength()
+		public void ExpandableBufferFailsToAddRangeWithNegativeLengthTest()
 		{
 			var buffer = new ExpandableBuffer();
 			var tempBuffer = new byte[] {1, 2, 3, 4, 5, 6, 7};
@@ -135,7 +135,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void ExpandableBufferFailsToAddRangeWithNullBuffer()
+		public void ExpandableBufferFailsToAddRangeWithNullBufferTest()
 		{
 			var buffer = new ExpandableBuffer();
 
@@ -151,7 +151,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void ExpandableBufferFailsToAddRangeWithZeroLength()
+		public void ExpandableBufferFailsToAddRangeWithZeroLengthTest()
 		{
 			var buffer = new ExpandableBuffer();
 			var tempBuffer = new byte[] {1, 2, 3, 4, 5, 6, 7};
@@ -168,7 +168,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void GetRangeFailsForEmptyBuffer()
+		public void GetRangeFailsForEmptyBufferTest()
 		{
 			var emptyBuffer = new ExpandableBuffer();
 
@@ -185,7 +185,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void GetRangeFailsWithIncorrectCountArgument()
+		public void GetRangeFailsWithIncorrectCountArgumentTest()
 		{
 			var buffer = new ExpandableBuffer();
 			buffer.AddRange(new byte[10], 10);
@@ -203,7 +203,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void GetRangeFailsWithIncorrectOffsetArgument()
+		public void GetRangeFailsWithIncorrectOffsetArgumentTest()
 		{
 			var buffer = new ExpandableBuffer();
 			buffer.AddRange(new byte[10], 10);
@@ -221,7 +221,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void GetRangeFailsWithIncorrectPositionArgument()
+		public void GetRangeFailsWithIncorrectPositionArgumentTest()
 		{
 			var buffer = new ExpandableBuffer();
 
@@ -238,7 +238,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void GetRangeFailsWithNullBufferArgument()
+		public void GetRangeFailsWithNullBufferArgumentTest()
 		{
 			var buffer = new ExpandableBuffer();
 			buffer.AddRange(new byte[10], 10);
@@ -255,7 +255,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void RepeatedAddRangeIncreasesCapacityToTwoTimesWithFillFactor05()
+		public void RepeatedAddRangeIncreasesCapacityToTwoTimesWithFillFactor05Test()
 		{
 			// Arrange
 			var buffer = new ExpandableBuffer(0.5);
@@ -283,28 +283,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void SuccessReadAndWriteBuffer()
-		{
-			// Arrange
-			var buffer = new ExpandableBuffer();
-			var tempBuffer = new byte[] {1, 2, 3, 4, 5, 6, 7};
-
-			// Act
-			buffer.AddRange(tempBuffer, tempBuffer.Length);
-
-			var outputBuffer = new byte[tempBuffer.Length];
-			var readBytes = buffer.GetRange(0, outputBuffer, 0, outputBuffer.Length);
-
-			// Assert
-			Assert.AreEqual(readBytes, outputBuffer.Length);
-			for (var i = 0; i < outputBuffer.Length; i++)
-			{
-				Assert.AreEqual(tempBuffer[i], outputBuffer[i]);
-			}
-		}
-
-		[Test]
-		public void SuccessReadAndWriteBuffers()
+		public void SuccessReadAndWriteBuffersTest()
 		{
 			// Arrange
 			var buffer = new ExpandableBuffer();
@@ -329,7 +308,28 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void ZeroLengthOfNewBuffer()
+		public void SuccessReadAndWriteBufferTest()
+		{
+			// Arrange
+			var buffer = new ExpandableBuffer();
+			var tempBuffer = new byte[] {1, 2, 3, 4, 5, 6, 7};
+
+			// Act
+			buffer.AddRange(tempBuffer, tempBuffer.Length);
+
+			var outputBuffer = new byte[tempBuffer.Length];
+			var readBytes = buffer.GetRange(0, outputBuffer, 0, outputBuffer.Length);
+
+			// Assert
+			Assert.AreEqual(readBytes, outputBuffer.Length);
+			for (var i = 0; i < outputBuffer.Length; i++)
+			{
+				Assert.AreEqual(tempBuffer[i], outputBuffer[i]);
+			}
+		}
+
+		[Test]
+		public void ZeroLengthOfNewBufferTest()
 		{
 			var buffer = new ExpandableBuffer();
 

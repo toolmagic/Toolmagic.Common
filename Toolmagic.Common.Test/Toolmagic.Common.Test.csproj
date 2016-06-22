@@ -47,17 +47,12 @@
     <Reference Include="NUnit3.TestAdapter">
       <HintPath>..\packages\NUnit3TestAdapter.3.0.10\lib\NUnit3.TestAdapter.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentTestSuite.cs" />
@@ -69,6 +64,10 @@
     <Compile Include="IO\CachingStreamTests.cs" />
     <Compile Include="IO\ExpandableBufferTests.cs" />
     <Compile Include="IO\FileSystemExtensionsTest.cs" />
+    <Compile Include="Presentation\ValueConverterTestSuite.cs" />
+    <Compile Include="Test2Exception.cs" />
+    <Compile Include="TestException.cs" />
+    <Compile Include="TestHelpers.cs" />
     <Compile Include="IO\TempFolderTestSuite.cs" />
     <Compile Include="NotEmptyTestSuite.cs" />
     <Compile Include="NotNullTestSuite.cs" />
@@ -77,7 +76,6 @@
     <Compile Include="Tasks\ParallelTaskTestSuite.cs" />
     <Compile Include="Tasks\PeriodicTaskTestSuite.cs" />
     <Compile Include="Tasks\SearchTaskTestSuite.cs" />
-    <Compile Include="TempFolderTestSuite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toolmagic.Common\Toolmagic.Common.csproj">

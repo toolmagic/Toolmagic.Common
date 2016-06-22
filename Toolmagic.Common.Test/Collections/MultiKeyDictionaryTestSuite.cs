@@ -64,9 +64,9 @@ namespace Toolmagic.Common.Test.Collections
 		}
 
 		[Test]
-		[TestCase(1, "4", ExpectedResult = typeof (ArgumentException))] // duplicate key1
-		[TestCase(5, "1", ExpectedResult = typeof (ArgumentException))] // duplicate key2
-		[TestCase(6, null, ExpectedResult = typeof (ArgumentNullException))] // key2 == null
+		[TestCase(1, "4", ExpectedResult = typeof(ArgumentException))] // duplicate key1
+		[TestCase(5, "1", ExpectedResult = typeof(ArgumentException))] // duplicate key2
+		[TestCase(6, null, ExpectedResult = typeof(ArgumentNullException))] // key2 == null
 		public Type MultiKeyDictionaryFailsAddingOnInvalidArgumentsTest(int key1, string key2)
 		{
 			var dictionary = CreateSampleDictionary();

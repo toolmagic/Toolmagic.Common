@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using NUnit.Framework;
 using Toolmagic.Common.Collections;
@@ -8,9 +9,9 @@ namespace Toolmagic.Common.Test.Collections
 	[TestFixture]
 	public sealed class CollectionExtensionTestSuite
 	{
-		[TestCase(0, ExpectedResult = typeof (ArgumentOutOfRangeException))]
-		[TestCase(-1, ExpectedResult = typeof (ArgumentOutOfRangeException))]
-		public object SplitFailedWithIncorrectArgumentsTest(int chunkSize)
+		[TestCase(0, ExpectedResult = typeof(ArgumentOutOfRangeException))]
+		[TestCase(-1, ExpectedResult = typeof(ArgumentOutOfRangeException))]
+		public object CollectionSplitFailsWithIncorrectArgumentsTest(int chunkSize)
 		{
 			var collection = new[] {"1", "2", "3", "4", "5", "6", "7", "8"};
 
@@ -25,7 +26,66 @@ namespace Toolmagic.Common.Test.Collections
 		}
 
 		[Test]
-		public void SplitTest()
+		public void CollectionAddsEmptyRangeTest()
+		{
+			var source = new Collection<string> {"1", "2"};
+			var collection = new string[] {};
+
+			var target = source.AddRange(collection);
+
+			Assert.IsNotNull(target);
+			CollectionAssert.AreEqual(source, target);
+		}
+
+		[Test]
+		public void CollectionAddsRangeTest()
+		{
+			var source = new Collection<string> {"1", "2"};
+			var collection = new[] {"3", "4", "5"};
+
+			const int skipElements = 1;
+			var takeElements = collection.Length - 2;
+
+			var target = source.AddRange(collection, skipElements, takeElements);
+
+			Assert.IsNotNull(target);
+			CollectionAssert.AreEqual(source.Union(collection.Skip(skipElements).Take(takeElements)), target);
+		}
+
+		[Test]
+		public void CollectionAddsTotalRangeTest()
+		{
+			var source = new Collection<string> {"1", "2"};
+			var collection = new[] {"3", "4", "5"};
+
+			var target = source.AddRange(collection);
+
+			Assert.IsNotNull(target);
+			CollectionAssert.AreEqual(source.Union(collection), target);
+		}
+
+		[Test]
+		public void CollectionFailsOnAddingRangeToFixedSizeCollectionTest()
+		{
+			var source = new[] {"1", "2"};
+			var collection = new[] {"3", "4", "5"};
+
+			var exception = Assert.Throws<ArgumentException>(() => { source.AddRange(collection, 0, collection.Length); });
+			Assert.AreEqual(@"source", exception.ParamName);
+		}
+
+		[Test]
+		public void CollectionFailsOnAddingTotalRangeToFixedSizeCollectionTest()
+		{
+			var source = new[] {"1", "2"};
+			var collection = new[] {"3", "4", "5"};
+
+			var exception = Assert.Throws<ArgumentException>(() => { source.AddRange(collection); });
+			Assert.AreEqual(@"source", exception.ParamName);
+		}
+
+		[Test]
+		public void CollectionSplitTest()
 		{
 			var collection = new[] {"1", "2", "3", "4", "5", "6", "7", "8"};
 
@@ -37,7 +97,7 @@ namespace Toolmagic.Common.Test.Collections
 		}
 
 		[Test]
-		public void SplitToEachElementTest()
+		public void CollectionSplitToEachElementTest()
 		{
 			var collection = new[] {"1", "2", "3", "4", "5", "6", "7", "8"};
 
@@ -51,7 +111,7 @@ namespace Toolmagic.Common.Test.Collections
 		}
 
 		[Test]
-		public void SplitWithTooLargeChunkSizeTest()
+		public void CollectionSplitWithTooLargeChunkSizeTest()
 		{
 			var collection = new[] {"1", "2", "3", "4", "5", "6", "7", "8"};
 

@@ -9,20 +9,12 @@ namespace Toolmagic.Common.Test.IO
 	[TestFixture]
 	public sealed class CachingStreamTests
 	{
-		private const string ResourceName = "Crawler.NET.pdf";
-
-		private Stream GetResourceStream(string resourceName)
-		{
-			var fullResourceName = $"{GetType().Namespace}.Resources.{resourceName.Replace(Path.PathSeparator, '.')}";
-			var stream = GetType().Assembly.GetManifestResourceStream(fullResourceName);
-			Assert.IsNotNull(stream, "Unknown resource: " + fullResourceName);
-			return stream;
-		}
+		private const string ResourceName = @"IO.Resources.Crawler.NET.pdf";
 
 		[Test]
-		public void CachingStreamDoesNothingOnFlushing()
+		public void CachingStreamDoesNothingOnFlushingTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -39,25 +31,28 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToGetLengthBeforeEof()
+		public void CachingStreamFailsToGetLengthBeforeEofTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
 					Assert.Throws<NotSupportedException>
 						(
 							// ReSharper disable once UnusedVariable
-							() => { var length = cachingStream.Length; }
+							() =>
+							{
+								var length = cachingStream.Length;
+							}
 						);
 				}
 			}
 		}
 
 		[Test]
-		public void CachingStreamFailsToSeekAfterEnd()
+		public void CachingStreamFailsToSeekAfterEndTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -71,9 +66,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToSeekBeforeBegin()
+		public void CachingStreamFailsToSeekBeforeBeginTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -87,9 +82,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToSeekCurrentBeforeBegin()
+		public void CachingStreamFailsToSeekCurrentBeforeBeginTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -105,9 +100,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToSeekWithUnknownOrigin()
+		public void CachingStreamFailsToSeekWithUnknownOriginTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -120,9 +115,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToSetLength()
+		public void CachingStreamFailsToSetLengthTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -135,9 +130,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToSetNegativePosition()
+		public void CachingStreamFailsToSetNegativePositionTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -151,9 +146,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToSetTooLargePosition()
+		public void CachingStreamFailsToSetTooLargePositionTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -167,9 +162,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFailsToWrite()
+		public void CachingStreamFailsToWriteTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -184,9 +179,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamFeatures()
+		public void CachingStreamFeaturesTest()
 		{
-			using (var stream = GetResourceStream(ResourceName))
+			using (var stream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(stream))
 				{
@@ -200,9 +195,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamGetsLength()
+		public void CachingStreamGetsLengthTest()
 		{
-			using (var stream = GetResourceStream(ResourceName))
+			using (var stream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(stream))
 				{
@@ -214,15 +209,15 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamReadsEntireBook()
+		public void CachingStreamReadsEntireBookTest()
 		{
 			const int bufferSize = 4096;
 
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
-					using (var notcachingStream = GetResourceStream(ResourceName))
+					using (var notcachingStream = TestHelpers.GetResourceStream(ResourceName))
 					{
 						while (true)
 						{
@@ -250,9 +245,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamSeeksCurrent()
+		public void CachingStreamSeeksCurrentTest()
 		{
-			using (var stream = GetResourceStream(ResourceName))
+			using (var stream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(stream))
 				{
@@ -273,9 +268,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamSeeksToBegin()
+		public void CachingStreamSeeksToBeginTest()
 		{
-			using (var stream = GetResourceStream(ResourceName))
+			using (var stream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(stream))
 				{
@@ -289,9 +284,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamSeeksToEnd()
+		public void CachingStreamSeeksToEndTest()
 		{
-			using (var stream = GetResourceStream(ResourceName))
+			using (var stream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(stream))
 				{
@@ -303,9 +298,9 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CachingStreamSetsPosition()
+		public void CachingStreamSetsPositionTest()
 		{
-			using (var sourceStream = GetResourceStream(ResourceName))
+			using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 			{
 				using (var cachingStream = new CachingStream(sourceStream))
 				{
@@ -318,13 +313,13 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void ClosedCachingStreamFailsOnRead()
+		public void ClosedCachingStreamFailsOnReadTest()
 		{
 			Assert.Throws<ObjectDisposedException>
 				(
 					() =>
 					{
-						using (var sourceStream = GetResourceStream(ResourceName))
+						using (var sourceStream = TestHelpers.GetResourceStream(ResourceName))
 						{
 							using (var cachingStream = new CachingStream(sourceStream))
 							{
@@ -337,19 +332,7 @@ namespace Toolmagic.Common.Test.IO
 		}
 
 		[Test]
-		public void CreateCachingStream()
-		{
-			using (var stream = GetResourceStream(ResourceName))
-			{
-				using (var cachingStream = new CachingStream(stream))
-				{
-					Assert.IsNotNull(cachingStream);
-				}
-			}
-		}
-
-		[Test]
-		public void CreateCachingStreamFailsWithNullUnderlyingStream()
+		public void CreateCachingStreamFailsWithNullUnderlyingStreamTest()
 		{
 			var exception = Assert.Throws<ArgumentNullException>
 				(
@@ -357,6 +340,18 @@ namespace Toolmagic.Common.Test.IO
 					() => { new CachingStream(null); }
 				);
 			Assert.AreEqual(@"stream", exception.ParamName);
+		}
+
+		[Test]
+		public void CreateCachingStreamTest()
+		{
+			using (var stream = TestHelpers.GetResourceStream(ResourceName))
+			{
+				using (var cachingStream = new CachingStream(stream))
+				{
+					Assert.IsNotNull(cachingStream);
+				}
+			}
 		}
 	}
 }

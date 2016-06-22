@@ -6,15 +6,20 @@ namespace Toolmagic.Common.Collections
 {
 	public static class CollectionExtension
 	{
-		public static ICollection<T> AddRange<T>(this ICollection<T> source, IEnumerable<T> addition)
+		public static ICollection<T> AddRange<T>(this ICollection<T> source, IEnumerable<T> collection)
 		{
-			Argument.IsNotNull(source, @"source");
+			Argument.IsNotNull(source, nameof(source));
 
 			// ReSharper disable once PossibleMultipleEnumeration
-			Argument.IsNotNull(addition, @"addition");
+			Argument.IsNotNull(collection, nameof(collection));
+
+			if (source.IsReadOnly)
+			{
+				throw new ArgumentException("Can't add items to read-only collection", nameof(source));
+			}
 
 			// ReSharper disable once PossibleMultipleEnumeration
-			foreach (var item in addition)
+			foreach (var item in collection)
 			{
 				source.Add(item);
 			}
@@ -22,16 +27,21 @@ namespace Toolmagic.Common.Collections
 			return source;
 		}
 
-		public static ICollection<T> AddRange<T>(this ICollection<T> source, IList<T> addition, int start, int count)
+		public static ICollection<T> AddRange<T>(this ICollection<T> source, IList<T> collection, int start, int count)
 		{
-			Argument.IsNotNull(source, @"source");
-			Argument.IsNotNull(addition, @"addition");
-			Argument.IsInRange(start, @"start", 0, addition.Count - 1);
-			Argument.IsInRange(count, @"count", 0, addition.Count - 1 - start);
+			Argument.IsNotNull(source, nameof(source));
+			Argument.IsNotNull(collection, nameof(collection));
+			Argument.IsInRange(start, nameof(start), 0, collection.Count - 1);
+			Argument.IsInRange(count, nameof(count), 0, collection.Count - start);
+
+			if (source.IsReadOnly)
+			{
+				throw new ArgumentException("Can't add items to read-only collection", nameof(source));
+			}
 
 			for (var i = start; i < start + count; i++)
 			{
-				source.Add(addition[i]);
+				source.Add(collection[i]);
 			}
 
 			return source;
