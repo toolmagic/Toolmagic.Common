@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Toolmagic.Common.IO;
 
 namespace Toolmagic.Common.Tasks
 {
@@ -47,104 +48,111 @@ namespace Toolmagic.Common.Tasks
 			NotNull<SearchTaskOptions> options
 			)
 		{
-			var runningTasksCounter = new InterlockedCounter(0);
+			//var runningTasksCounter = new InterlockedCounter(0);
+
+			IConsole console = new SystemConsole();
 
 			var actions = new Action[options.Value.MaxDegreeOfParallelism];
 			for (var i = 0; i < actions.Length; i++)
 			{
+				var taskId = i;
+
 				actions[i] = async () =>
 				{
 					try
 					{
 						await ExecuteTask
 							(
+								taskId,
 								queue,
 								options.Value.DequeueWaitTimeout,
-								runningTasksCounter,
+								//runningTasksCounter,
 								action,
-								cancellationToken
+								cancellationToken,
+								console
 							);
 					}
 					catch (OperationCanceledException)
 					{
 						// It's just cancelling, no errors.
+						console.WriteLine("OperationCanceledException occured.");
 					}
 				};
 			}
 
-			//var parallelOptions = new ParallelOptions
-			//{
-			//	MaxDegreeOfParallelism = options.Value.MaxDegreeOfParallelism
-			//};
+			//ParallelTask
+			//	.StartNew(actions)
+			//	.Wait(CancellationToken.None);
 
-			ParallelTask
-				.StartNew(actions)
-				.Wait(CancellationToken.None);
+			var parallelOptions = new ParallelOptions
+			{
+				MaxDegreeOfParallelism = options.Value.MaxDegreeOfParallelism
+			};
 
-			//Parallel.ForEach(actions, parallelOptions, a => a.Invoke());
+			Parallel.ForEach(actions, parallelOptions, a => a.Invoke());
 		}
 
 		private static async Task ExecuteTask<T>
 			(
+			int taskId,
 			NotNull<IHierarchicalQueue<T>> queue,
 			int dequeueWaitTimeout,
-			InterlockedCounter runningTasksCounter,
+			//InterlockedCounter runningTasksCounter,
 			NotNull<Func<T, CancellationToken, IEnumerable<T>>> action,
-			CancellationToken cancellationToken
+			CancellationToken cancellationToken,
+			IConsole console
 			)
 		{
 			while (true)
 			{
 				if (cancellationToken.IsCancellationRequested)
 				{
+					console.WriteLine("{0}. Completed on cancellation - 1", taskId);
 					break;
 				}
 
-				T item;
-				if (!queue.Value.TryDequeue(out item))
+				if (queue.Value.IsCompleted)
 				{
-					if (cancellationToken.IsCancellationRequested)
-					{
-						break;
-					}
-
-					if (runningTasksCounter.IsZero())
-					{
-						break;
-					}
-
-					if (dequeueWaitTimeout > 0)
-					{
-						await Task.Delay(dequeueWaitTimeout, cancellationToken);
-					}
-
-					continue;
-				}
-
-				if (cancellationToken.IsCancellationRequested)
-				{
+					console.WriteLine("{0}. Completed on IsCompleted = true", taskId);
 					break;
 				}
 
+				var processItem = false;
+				var item = default(T);
 				try
 				{
-					runningTasksCounter.Increment();
+					processItem = queue.Value.TryDequeue(out item);
 
-					foreach (var childItem in action.Value.Invoke(item, cancellationToken))
+					if (cancellationToken.IsCancellationRequested)
 					{
-						if (cancellationToken.IsCancellationRequested)
-						{
-							break;
-						}
+						console.WriteLine("{0}. Completed on cancellation - 2", taskId);
+						break;
+					}
 
-						queue.Value.TryEnqueue(item, childItem);
+					if (processItem)
+					{
+						foreach (var childItem in action.Value.Invoke(item, cancellationToken))
+						{
+							queue.Value.TryEnqueue(item, childItem);
+						}
+					}
+					else
+					{
+						if (dequeueWaitTimeout > 0)
+						{
+							await Task.Delay(dequeueWaitTimeout, cancellationToken);
+						}
 					}
 				}
 				finally
 				{
-					runningTasksCounter.Decrement();
+					if (processItem)
+					{
+						queue.Value.CompleteItem(item);
+					}
 				}
 			}
+			console.WriteLine("{0}. Completed while(true) {}", taskId);
 		}
 	}
 }

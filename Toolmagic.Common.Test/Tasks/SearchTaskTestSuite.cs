@@ -58,11 +58,11 @@ namespace Toolmagic.Common.Test.Tasks
 					initialUrls,
 					(url, token) =>
 					{
+						outputItems.Add(url);
+
 						Task
 							.Delay(10, token)
 							.Wait(token);
-
-						outputItems.Add(url);
 
 						var subItems = new Collection<string>();
 
@@ -91,10 +91,10 @@ namespace Toolmagic.Common.Test.Tasks
 			task.Wait(CancellationToken.None);
 
 			// Assert
-			if (expectedItemsCount != outputItems.Count)
-			{
-				outputItems.ToList().ForEach(System.Console.WriteLine);
-			}
+			//if (expectedItemsCount != outputItems.Count)
+			//{
+			//	outputItems.ToList().ForEach(System.Console.WriteLine);
+			//}
 
 			Assert.AreEqual(expectedItemsCount, outputItems.Count);
 		}
@@ -123,10 +123,10 @@ namespace Toolmagic.Common.Test.Tasks
 			task.Wait(cancellationTokenSource.Token);
 
 			// Assert
-			if (expectedItemsCount != outputItems.Count)
-			{
-				outputItems.ToList().ForEach(System.Console.WriteLine);
-			}
+			//if (expectedItemsCount != outputItems.Count)
+			//{
+			//	outputItems.ToList().ForEach(System.Console.WriteLine);
+			//}
 
 			Assert.AreEqual(expectedItemsCount, outputItems.Count);
 		}
@@ -224,7 +224,8 @@ namespace Toolmagic.Common.Test.Tasks
 		}
 
 		[Test]
-		public void SearchTaskRunsWithVariousParallelismValueTest([Values(2, 4, 8, 16, 32)] int degreeOfParallelism)
+		public void SearchTaskRunsWithVariousParallelismValueTest(
+			[Values(2, 4, 6, 8, 10, 12, 16, 24, 32)] int degreeOfParallelism)
 		{
 			// Arrange
 			var outputItems = new ConcurrentBag<string>();
@@ -247,10 +248,10 @@ namespace Toolmagic.Common.Test.Tasks
 			task.Wait(cancellationTokenSource.Token);
 
 			// Assert
-			if (expectedItemsCount != outputItems.Count)
-			{
-				outputItems.ToList().ForEach(System.Console.WriteLine);
-			}
+			//if (expectedItemsCount != outputItems.Count)
+			//{
+			//	outputItems.ToList().ForEach(System.Console.WriteLine);
+			//}
 
 			Assert.AreEqual(expectedItemsCount, outputItems.Count);
 		}

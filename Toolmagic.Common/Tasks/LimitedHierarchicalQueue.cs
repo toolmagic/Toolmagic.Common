@@ -5,12 +5,13 @@ namespace Toolmagic.Common.Tasks
 {
 	internal sealed class LimitedHierarchicalQueue<T> : IHierarchicalQueue<T>
 	{
-		private readonly Dictionary<T, int> _depths = new Dictionary<T, int>();
+		private readonly Dictionary<T, int> _itemDepths = new Dictionary<T, int>();
 		private readonly object _lockObject = new object();
 		private readonly int _maxHierarchyDepth;
 		private readonly int _maxQueueCount;
 		private readonly Queue<T> _queue = new Queue<T>();
-		private int _totalQueueCount;
+		private int _inProgressCount;
+		private int _processedCount;
 
 		public LimitedHierarchicalQueue(T[] initialItems, int maxHierarchyDepth, int maxQueueLength)
 		{
@@ -20,30 +21,33 @@ namespace Toolmagic.Common.Tasks
 			initialItems
 				.ToList()
 				.ForEach(item => { TryEnqueue(default(T), item); });
-
-			_totalQueueCount = initialItems.Length;
 		}
 
 		public bool TryEnqueue(T parentItem, T item)
 		{
 			lock (_lockObject)
 			{
-				if (_totalQueueCount >= _maxQueueCount)
+				if (_processedCount == _maxQueueCount)
+				{
+					return false;
+				}
+
+				if (_itemDepths.ContainsKey(item))
 				{
 					return false;
 				}
 
 				var parentDepth = 0;
 
-				if (typeof (T).IsValueType)
+				if (typeof(T).IsValueType)
 				{
-					_depths.TryGetValue(parentItem, out parentDepth);
+					_itemDepths.TryGetValue(parentItem, out parentDepth);
 				}
 				else
 				{
 					if (parentItem != null)
 					{
-						parentDepth = _depths[parentItem];
+						parentDepth = _itemDepths[parentItem];
 					}
 				}
 
@@ -52,14 +56,8 @@ namespace Toolmagic.Common.Tasks
 					return false;
 				}
 
-				if (_depths.ContainsKey(item))
-				{
-					return false;
-				}
-
-				_depths.Add(item, parentDepth + 1);
+				_itemDepths.Add(item, parentDepth + 1);
 				_queue.Enqueue(item);
-				_totalQueueCount++;
 
 				return true;
 			}
@@ -67,15 +65,59 @@ namespace Toolmagic.Common.Tasks
 
 		public bool TryDequeue(out T item)
 		{
+			if (IsCompleted)
+			{
+				item = default(T);
+				return false;
+			}
+
 			lock (_lockObject)
 			{
-				if (_queue.Count > 0)
+				if (_processedCount < _maxQueueCount && _queue.Count > 0)
 				{
 					item = _queue.Dequeue();
+					System.Console.WriteLine("- Dequeue: {0}", item);
+					_inProgressCount++;
 					return true;
 				}
 				item = default(T);
 				return false;
+			}
+		}
+
+		public void CompleteItem(T item)
+		{
+			lock (_lockObject)
+			{
+				System.Console.WriteLine("+ Complete: {0}", item);
+
+				_inProgressCount--;
+				_processedCount++;
+			}
+		}
+
+		public bool IsCompleted
+		{
+			get
+			{
+				lock (_lockObject)
+				{
+					var returnValue = _inProgressCount == 0 && _queue.Count == 0;
+
+					if (returnValue)
+					{
+						System.Console.WriteLine("\t_inProgressCount: {0}", _inProgressCount);
+						System.Console.WriteLine("\t\t_processedCount: {0}", _processedCount);
+						System.Console.WriteLine("\t\t_maxQueueCount: {0}", _maxQueueCount);
+						System.Console.WriteLine("\t\t_queue.Count: {0}", _queue.Count);
+					}
+
+					return returnValue;
+					//return
+					//	_inProgressCount == 0 &&
+					//	(_processedCount == _maxQueueCount || _queue.Count == 0)
+					//	;
+				}
 			}
 		}
 	}
