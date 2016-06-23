@@ -65,18 +65,11 @@ namespace Toolmagic.Common.Tasks
 
 		public bool TryDequeue(out T item)
 		{
-			if (IsCompleted)
-			{
-				item = default(T);
-				return false;
-			}
-
 			lock (_lockObject)
 			{
-				if (_processedCount < _maxQueueCount && _queue.Count > 0)
+				if (_queue.Count > 0)
 				{
 					item = _queue.Dequeue();
-					System.Console.WriteLine("- Dequeue: {0}", item);
 					_inProgressCount++;
 					return true;
 				}
@@ -89,8 +82,6 @@ namespace Toolmagic.Common.Tasks
 		{
 			lock (_lockObject)
 			{
-				System.Console.WriteLine("+ Complete: {0}", item);
-
 				_inProgressCount--;
 				_processedCount++;
 			}
@@ -102,21 +93,7 @@ namespace Toolmagic.Common.Tasks
 			{
 				lock (_lockObject)
 				{
-					var returnValue = _inProgressCount == 0 && _queue.Count == 0;
-
-					if (returnValue)
-					{
-						System.Console.WriteLine("\t_inProgressCount: {0}", _inProgressCount);
-						System.Console.WriteLine("\t\t_processedCount: {0}", _processedCount);
-						System.Console.WriteLine("\t\t_maxQueueCount: {0}", _maxQueueCount);
-						System.Console.WriteLine("\t\t_queue.Count: {0}", _queue.Count);
-					}
-
-					return returnValue;
-					//return
-					//	_inProgressCount == 0 &&
-					//	(_processedCount == _maxQueueCount || _queue.Count == 0)
-					//	;
+					return _inProgressCount == 0 && _queue.Count == 0;
 				}
 			}
 		}

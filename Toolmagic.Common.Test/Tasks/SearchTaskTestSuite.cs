@@ -60,9 +60,7 @@ namespace Toolmagic.Common.Test.Tasks
 					{
 						outputItems.Add(url);
 
-						Task
-							.Delay(10, token)
-							.Wait(token);
+						Thread.Sleep(10);
 
 						var subItems = new Collection<string>();
 
