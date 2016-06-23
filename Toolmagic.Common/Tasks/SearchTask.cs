@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Toolmagic.Common.IO;
+using Toolmagic.Common.Collections;
 
 namespace Toolmagic.Common.Tasks
 {
@@ -21,16 +21,17 @@ namespace Toolmagic.Common.Tasks
 			var notNullInitialItems = Argument.IsNotNull(initialItems, "initialItems");
 
 			var items = notNullInitialItems.Value.ToArray();
-
 			if (items.Length == 0)
 			{
 				throw new ArgumentException(@"Initial items collection cannot be empty");
 			}
 
 			var queueOptions = NotNull<SearchTaskOptions>.Create(options ?? new SearchTaskOptions());
-			var queue = NotNull<IHierarchicalQueue<T>>.Create
+
+			var queue = NotNull<IBlockingQueue<HierarchyElement<T>>>.Create
 				(
-					new LimitedHierarchicalQueue<T>(items, queueOptions.Value.MaxHierarchyDepth, queueOptions.Value.MaxQueueLength)
+					new HierarchicalLimitedBlockingQueue<T>(items, queueOptions.Value.MaxQueueLength,
+						queueOptions.Value.MaxHierarchyDepth)
 				);
 
 			await Task.Run
@@ -42,98 +43,76 @@ namespace Toolmagic.Common.Tasks
 
 		private static void Process<T>
 			(
-			NotNull<IHierarchicalQueue<T>> queue,
+			NotNull<IBlockingQueue<HierarchyElement<T>>> queue,
 			NotNull<Func<T, CancellationToken, IEnumerable<T>>> action,
 			CancellationToken cancellationToken,
 			NotNull<SearchTaskOptions> options
 			)
 		{
-			//var runningTasksCounter = new InterlockedCounter(0);
-
-			IConsole console = new SystemConsole();
-
 			var actions = new Action[options.Value.MaxDegreeOfParallelism];
+
 			for (var i = 0; i < actions.Length; i++)
 			{
-				var taskId = i;
-
 				actions[i] = async () =>
 				{
 					try
 					{
 						await ExecuteTask
 							(
-								taskId,
 								queue,
 								options.Value.DequeueWaitTimeout,
-								//runningTasksCounter,
 								action,
-								cancellationToken,
-								console
+								cancellationToken
 							);
 					}
 					catch (OperationCanceledException)
 					{
 						// It's just cancelling, no errors.
-						console.WriteLine("OperationCanceledException occured.");
 					}
 				};
 			}
 
-			//ParallelTask
-			//	.StartNew(actions)
-			//	.Wait(CancellationToken.None);
-
-			var parallelOptions = new ParallelOptions
-			{
-				MaxDegreeOfParallelism = options.Value.MaxDegreeOfParallelism
-			};
-
-			Parallel.ForEach(actions, parallelOptions, a => a.Invoke());
+			ParallelTask
+				.StartNew(actions)
+				.Wait(CancellationToken.None);
 		}
+
 
 		private static async Task ExecuteTask<T>
 			(
-			int taskId,
-			NotNull<IHierarchicalQueue<T>> queue,
+			NotNull<IBlockingQueue<HierarchyElement<T>>> queue,
 			int dequeueWaitTimeout,
-			//InterlockedCounter runningTasksCounter,
 			NotNull<Func<T, CancellationToken, IEnumerable<T>>> action,
-			CancellationToken cancellationToken,
-			IConsole console
+			CancellationToken cancellationToken
 			)
 		{
-			while (true)
+			while (!queue.Value.IsCompleted)
 			{
 				if (cancellationToken.IsCancellationRequested)
 				{
-					console.WriteLine("{0}. Completed on cancellation - 1", taskId);
-					break;
-				}
-
-				if (queue.Value.IsCompleted)
-				{
-					console.WriteLine("{0}. Completed on IsCompleted = true", taskId);
 					break;
 				}
 
 				var processItem = false;
-				var item = default(T);
+				var item = default(HierarchyElement<T>);
 				try
 				{
 					processItem = queue.Value.TryDequeue(out item);
 
 					if (cancellationToken.IsCancellationRequested)
 					{
-						console.WriteLine("{0}. Completed on cancellation - 2", taskId);
 						break;
 					}
 
 					if (processItem)
 					{
-						foreach (var childItem in action.Value.Invoke(item, cancellationToken))
+						foreach (var childItem in action.Value.Invoke(item.Child, cancellationToken))
 						{
-							queue.Value.TryEnqueue(item, childItem);
+							if (cancellationToken.IsCancellationRequested)
+							{
+								break;
+							}
+							queue.Value.TryEnqueue(new HierarchyElement<T>(item.Child, childItem));
 						}
 					}
 					else
@@ -148,11 +127,10 @@ namespace Toolmagic.Common.Tasks
 				{
 					if (processItem)
 					{
-						queue.Value.CompleteItem(item);
+						queue.Value.ReleaseItem(item);
 					}
 				}
 			}
-			console.WriteLine("{0}. Completed while(true) {}", taskId);
 		}
 	}
 }

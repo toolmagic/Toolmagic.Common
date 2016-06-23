@@ -57,7 +57,9 @@
   <ItemGroup>
     <Compile Include="ArgumentTestSuite.cs" />
     <Compile Include="BlockTestSuite.cs" />
+    <Compile Include="Collections\BlockingQueueTestSuite.cs" />
     <Compile Include="Collections\CollectionExtensionTestSuite.cs" />
+    <Compile Include="Collections\LimitedBlockingQueueTestSuite.cs" />
     <Compile Include="Collections\MultiKeyDictionaryTestSuite.cs" />
     <Compile Include="Console\ArgumentBuilderTestSuite.cs" />
     <Compile Include="Console\CommandListTestSuite.cs" />
