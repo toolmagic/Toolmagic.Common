@@ -17,13 +17,13 @@ namespace Toolmagic.Common.Tasks
 			SearchTaskOptions options = null
 			)
 		{
-			var notNullAction = Argument.IsNotNull(action, "action");
-			var notNullInitialItems = Argument.IsNotNull(initialItems, "initialItems");
+			var notNullAction = Argument.IsNotNull(action, nameof(action));
+			var notNullInitialItems = Argument.IsNotNull(initialItems, nameof(initialItems));
 
 			var items = notNullInitialItems.Value.ToArray();
 			if (items.Length == 0)
 			{
-				throw new ArgumentException(@"Initial items collection cannot be empty");
+				throw new ArgumentException(@"Initial items collection cannot be empty", nameof(initialItems));
 			}
 
 			var queueOptions = NotNull<SearchTaskOptions>.Create(options ?? new SearchTaskOptions());
