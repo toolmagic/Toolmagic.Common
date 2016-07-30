@@ -61,6 +61,7 @@
     <Compile Include="Collections\CollectionExtensionTestSuite.cs" />
     <Compile Include="Collections\LimitedBlockingQueueTestSuite.cs" />
     <Compile Include="Collections\MultiKeyDictionaryTestSuite.cs" />
+    <Compile Include="Collections\PriorityQueueTestSuite.cs" />
     <Compile Include="Console\ArgumentBuilderTestSuite.cs" />
     <Compile Include="Console\CommandListTestSuite.cs" />
     <Compile Include="DisposableTestSuite.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Tasks\ParallelTaskTestSuite.cs" />
     <Compile Include="Tasks\PeriodicTaskTestSuite.cs" />
     <Compile Include="Tasks\SearchTaskTestSuite.cs" />
+    <Compile Include="Threading\PriorityReaderWriterLockTestSuite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toolmagic.Common\Toolmagic.Common.csproj">
@@ -93,6 +95,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

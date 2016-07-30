@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -9,6 +11,14 @@ namespace Toolmagic.Common.Test
 	[TestFixture]
 	public sealed class DisposableTestSuite
 	{
+		public void DisposableCollectionCastsFromGenericCollectionTest()
+		{
+			IEnumerable<MemoryStream> streamCollection = new Collection<MemoryStream>();
+
+			IEnumerable<IDisposable> disposableCollection = streamCollection;
+			Assert.NotNull(disposableCollection);
+		}
+
 		[Test]
 		public void DisposableAcceptsNotNullValueTest()
 		{
@@ -16,6 +26,24 @@ namespace Toolmagic.Common.Test
 			disposable.Expect(a => a.Dispose());
 
 			using (Disposable.Wrap(NotNull.Wrap(disposable)))
+			{
+			}
+		}
+
+		[Test]
+		public void DisposableDisposesDisposableCollectionTest()
+		{
+			ICollection<IDisposable> items = new Collection<IDisposable>();
+
+			for (var i = 0; i < 10; i++)
+			{
+				var disposable = MockRepository.GenerateStrictMock<IDisposable>();
+				disposable.Expect(a => a.Dispose());
+
+				items.Add(disposable);
+			}
+
+			using (Disposable.Wrap(items))
 			{
 			}
 		}
@@ -30,6 +58,7 @@ namespace Toolmagic.Common.Test
 			{
 			}
 		}
+
 
 		[Test]
 		public void DisposableFailsOnNullValueTest()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Toolmagic.Common
 {
@@ -46,6 +47,15 @@ namespace Toolmagic.Common
 				if (disposing)
 				{
 					(_value.Value as IDisposable)?.Dispose();
+
+					var disposableCollection = _value.Value as IEnumerable<IDisposable>;
+					if (disposableCollection != null)
+					{
+						foreach (var disposable in disposableCollection)
+						{
+							disposable.Dispose();
+						}
+					}
 				}
 				_disposedValue = true;
 			}

@@ -51,7 +51,9 @@
     <Compile Include="Argument.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="Collections\CollectionExtension.cs" />
+    <Compile Include="Collections\PriorityQueue.cs" />
     <Compile Include="Collections\IMultiKeyDictionary.cs" />
+    <Compile Include="Collections\IProrityQueue.cs" />
     <Compile Include="Collections\MultiKeyDictionary.cs" />
     <Compile Include="Console\ArgumentBuilder.cs" />
     <Compile Include="Console\CommandList.cs" />
@@ -86,6 +88,11 @@
     <Compile Include="Tasks\PeriodicTask.cs" />
     <Compile Include="Tasks\SearchTask.cs" />
     <Compile Include="Tasks\SearchTaskOptions.cs" />
+    <Compile Include="Threading\PriorityReaderWriterLock.cs" />
+    <Compile Include="Threading\IReaderWriterLockingStrategy.cs" />
+    <Compile Include="Threading\ReadFirstLockingStrategy.cs" />
+    <Compile Include="Threading\ReadWritePriority.cs" />
+    <Compile Include="Threading\DefaultReadWriteLockingStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
