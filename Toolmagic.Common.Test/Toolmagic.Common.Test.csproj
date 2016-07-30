@@ -63,6 +63,7 @@
     <Compile Include="Collections\MultiKeyDictionaryTestSuite.cs" />
     <Compile Include="Console\ArgumentBuilderTestSuite.cs" />
     <Compile Include="Console\CommandListTestSuite.cs" />
+    <Compile Include="DisposableTestSuite.cs" />
     <Compile Include="IO\CachingStreamTests.cs" />
     <Compile Include="IO\ExpandableBufferTests.cs" />
     <Compile Include="IO\FileSystemExtensionsTest.cs" />

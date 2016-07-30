@@ -59,6 +59,7 @@
     <Compile Include="Console\ICommand.cs" />
     <Compile Include="Console\IncorrectUsageException.cs" />
     <Compile Include="Console\ReturnCode.cs" />
+    <Compile Include="Disposable.cs" />
     <Compile Include="FinallyBlock.cs" />
     <Compile Include="FinallyBlockGeneric.cs" />
     <Compile Include="IO\CachingStream.cs" />

@@ -23,12 +23,12 @@ namespace Toolmagic.Common.Test.IO
 			}
 		}
 
-		[Test]
-		[Ignore("Implement this test later! It requires too large memory (2GB) or redesign to mock expandable buffer")]
-		public void CachingStreamFailsReadingOnTooLarge2GbUnderlyingStreamTest()
-		{
-			Assert.Fail("Not implemented");
-		}
+		//[Test]
+		//[Ignore("Implement this test later! It requires too large memory (2GB) or redesign to mock expandable buffer")]
+		//public void CachingStreamFailsReadingOnTooLarge2GbUnderlyingStreamTest()
+		//{
+		//	Assert.Fail("Not implemented");
+		//}
 
 		[Test]
 		public void CachingStreamFailsToGetLengthBeforeEofTest()
