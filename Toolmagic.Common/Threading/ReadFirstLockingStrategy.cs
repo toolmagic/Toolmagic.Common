@@ -8,8 +8,9 @@ namespace Toolmagic.Common.Threading
 	{
 		private readonly object _lockObject = new object();
 		private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim();
+		private readonly Queue<long> _writersQueue = new Queue<long>();
 		private int _readerCount;
-		private readonly Queue<Guid> _writersQueue = new Queue<Guid>();
+		private long _writerIdGenerator = long.MinValue;
 
 		public void Dispose()
 		{
@@ -20,33 +21,75 @@ namespace Toolmagic.Common.Threading
 
 		public void EnterReadLock()
 		{
-			lock (_lockObject)
-			{
-				_readerCount++;
-			}
+			RegisterReader();
 
 			_rwLock.EnterReadLock();
 		}
 
 		public void ExitReadLock()
 		{
-			_rwLock.ExitReadLock();
+			UnregisterReader();
 
+			_rwLock.ExitReadLock();
+		}
+
+		public void EnterWriteLock()
+		{
+			var writerId = RegisterWriter();
+			WaitForWriter(writerId);
+
+			_rwLock.EnterWriteLock();
+		}
+
+		public void ExitWriteLock()
+		{
+			UnregisterLastWriter();
+
+			_rwLock.ExitWriteLock();
+		}
+
+		private void RegisterReader()
+		{
+			lock (_lockObject)
+			{
+				_readerCount++;
+			}
+		}
+
+		private void UnregisterReader()
+		{
 			lock (_lockObject)
 			{
 				_readerCount--;
 			}
 		}
 
-		public void EnterWriteLock()
+		private void UnregisterLastWriter()
 		{
-			var writerId = Guid.NewGuid();
-
 			lock (_lockObject)
 			{
-				_writersQueue.Enqueue(writerId);
+				_writersQueue.Dequeue();
 			}
+		}
 
+		private long RegisterWriter()
+		{
+			lock (_lockObject)
+			{
+				if (_writerIdGenerator == long.MaxValue)
+				{
+					_writerIdGenerator = long.MinValue;
+				}
+
+				var writerId = _writerIdGenerator++;
+				_writersQueue.Enqueue(writerId);
+
+				return writerId;
+			}
+		}
+
+		private void WaitForWriter(long writerId)
+		{
 			while (true)
 			{
 				lock (_lockObject)
@@ -57,18 +100,6 @@ namespace Toolmagic.Common.Threading
 					}
 				}
 				Thread.Sleep(1);
-			}
-
-			_rwLock.EnterWriteLock();
-		}
-
-		public void ExitWriteLock()
-		{
-			_rwLock.ExitWriteLock();
-
-			lock (_lockObject)
-			{
-				_writersQueue.Dequeue();
 			}
 		}
 	}

@@ -3,10 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using NUnit.Framework;
+using Toolmagic.Common.Tasks;
 using Toolmagic.Common.Threading;
 
 namespace Toolmagic.Common.Test.Threading
@@ -89,15 +88,15 @@ namespace Toolmagic.Common.Test.Threading
 				{0, new ResourceTaskInfo(ResourceTaskOperation.Read, 0, 100, 0, 10)},
 				{1, new ResourceTaskInfo(ResourceTaskOperation.Read, 0, 200, 0, 10)},
 				{2, new ResourceTaskInfo(ResourceTaskOperation.Read, 0, 300, 0, 10)},
-				{3, new ResourceTaskInfo(ResourceTaskOperation.Write, 5, 2000, 300, 6400)},
-				{4, new ResourceTaskInfo(ResourceTaskOperation.Write, 5, 2000, 300, 6400)},
-				{5, new ResourceTaskInfo(ResourceTaskOperation.Write, 5, 2000, 300, 6400)},
-				{6, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 100, 0, 10)},
-				{7, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 200, 0, 10)},
-				{8, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 300, 0, 10)},
-				{9, new ResourceTaskInfo(ResourceTaskOperation.Write, 10, 2000, 6000, 6100)},
-				{10, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 400, 1000, 1100)},
-				{11, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 100, 1000, 1100)}
+				{3, new ResourceTaskInfo(ResourceTaskOperation.Write, 5, 2000, 290, 5000)},
+				{4, new ResourceTaskInfo(ResourceTaskOperation.Write, 10, 2000, 285, 5000)},
+				{5, new ResourceTaskInfo(ResourceTaskOperation.Write, 15, 2000, 280, 5000)},
+				{6, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 100, 8000, 9000)},
+				{7, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 200, 8000, 9000)},
+				{8, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 300, 8000, 9000)},
+				{9, new ResourceTaskInfo(ResourceTaskOperation.Write, 30, 2000, 6000, 7000)},
+				{10, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 400, 5000, 6000)},
+				{11, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 100, 5000, 6000)}
 			};
 
 			ExecuteLockingStrategyTest(ReadWritePriority.Default, tasks);
@@ -125,15 +124,15 @@ namespace Toolmagic.Common.Test.Threading
 				{0, new ResourceTaskInfo(ResourceTaskOperation.Read, 0, 100, 0, 10)},
 				{1, new ResourceTaskInfo(ResourceTaskOperation.Read, 0, 200, 0, 10)},
 				{2, new ResourceTaskInfo(ResourceTaskOperation.Read, 0, 300, 0, 10)},
-				{3, new ResourceTaskInfo(ResourceTaskOperation.Write, 5, 2000, 300, 310)},
-				{4, new ResourceTaskInfo(ResourceTaskOperation.Write, 10, 2000, 1700, 6800)},
-				{5, new ResourceTaskInfo(ResourceTaskOperation.Write, 15, 2000, 1700, 6800)},
+				{3, new ResourceTaskInfo(ResourceTaskOperation.Write, 5, 2000, 295, 500)},
+				{4, new ResourceTaskInfo(ResourceTaskOperation.Write, 10, 2000, 1690, 2500)},
+				{5, new ResourceTaskInfo(ResourceTaskOperation.Write, 15, 2000, 3685, 5000)},
 				{6, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 100, 0, 10)},
 				{7, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 200, 0, 10)},
 				{8, new ResourceTaskInfo(ResourceTaskOperation.Read, 20, 300, 0, 10)},
-				{9, new ResourceTaskInfo(ResourceTaskOperation.Write, 30, 2000, 6000, 6100)},
-				{10, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 400, 1000, 1100)},
-				{11, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 100, 1000, 1100)}
+				{9, new ResourceTaskInfo(ResourceTaskOperation.Write, 30, 2000, 6000, 7000)},
+				{10, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 400, 1000, 2000)},
+				{11, new ResourceTaskInfo(ResourceTaskOperation.Read, 3000, 100, 1000, 2000)}
 			};
 
 			ExecuteLockingStrategyTest(ReadWritePriority.ReadFirst, tasks);
@@ -178,7 +177,9 @@ namespace Toolmagic.Common.Test.Threading
 
 		public void Invoke()
 		{
-			Parallel.Invoke(_actions.ToArray());
+			ParallelTask
+				.StartNew(_actions)
+				.Wait();
 		}
 	}
 
