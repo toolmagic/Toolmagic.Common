@@ -19,5 +19,6 @@ namespace Toolmagic.Common.IO
 		IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 		IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 		IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+		string GetActualPath(string path);
 	}
 }

@@ -16,6 +16,24 @@ namespace Toolmagic.Common
 		{
 			return new Disposable<T>(value);
 		}
+
+		public static void Dispose<T>(T obj) where T : class
+		{
+			if (obj != null)
+			{
+				Wrap(obj).Dispose();
+			}
+		}
+
+		public static void Dispose<T>(NotNull<T> obj) where T : class
+		{
+			Wrap(obj).Dispose();
+		}
+
+		public static DisposabeHolder CreateHolder()
+		{
+			return new DisposabeHolder();
+		}
 	}
 
 	public sealed class Disposable<T> : IDisposable where T : class

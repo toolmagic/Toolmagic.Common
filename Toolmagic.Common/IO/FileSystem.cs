@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Toolmagic.Common.IO
@@ -64,6 +66,23 @@ namespace Toolmagic.Common.IO
 			return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
 		}
 
+		public string GetActualPath(string path)
+		{
+			Argument.IsNotEmpty(path, nameof(path));
+
+			if (FileExists(path))
+			{
+				return GetFileActualPath(path);
+			}
+
+			if (DirectoryExists(path))
+			{
+				return GetDirectoryActualPath(path);
+			}
+
+			throw new IOException($"File entry does not exist: {path}");
+		}
+
 		public Stream CreateFileStream(string path, FileMode mode, FileAccess access)
 		{
 			return new FileStream(path, mode, access);
@@ -72,6 +91,39 @@ namespace Toolmagic.Common.IO
 		public string GetTempPath()
 		{
 			return Path.GetTempPath();
+		}
+
+		private string GetFileActualPath(string filePath)
+		{
+			var fileInfo = new FileInfo(filePath);
+
+			var directory = fileInfo.Directory;
+
+			// ReSharper disable once PossibleNullReferenceException
+			var fileSystemEntry = directory.EnumerateFileSystemInfos(fileInfo.Name).First();
+
+			return Path.Combine(GetDirectoryActualPath(directory.FullName), fileSystemEntry.Name);
+		}
+
+		private string GetDirectoryActualPath(string directoryPath)
+		{
+			var pathParts = new Collection<string>();
+
+			var directory = new DirectoryInfo(directoryPath);
+			var parentDirectory = directory.Parent;
+
+			while (parentDirectory != null)
+			{
+				var childDirectory = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
+				pathParts.Add(childDirectory.Name);
+
+				directory = parentDirectory;
+				parentDirectory = directory.Parent;
+			}
+
+			pathParts.Add(directory.FullName.ToUpperInvariant());
+
+			return Path.Combine(pathParts.Reverse().ToArray());
 		}
 	}
 }
