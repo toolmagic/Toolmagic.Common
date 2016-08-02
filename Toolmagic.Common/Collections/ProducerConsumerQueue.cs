@@ -40,10 +40,12 @@ namespace Toolmagic.Common.Collections
 		public void Shutdown()
 		{
 			_cancellationTokenSource.Cancel();
+
 			lock (_lockObject)
 			{
 				Monitor.Pulse(_lockObject);
 			}
+
 			_consumerThread.Join();
 		}
 
@@ -63,9 +65,14 @@ namespace Toolmagic.Common.Collections
 				T item;
 				lock (_lockObject)
 				{
-					while (_queue.Count == 0)
+					if (_queue.Count == 0)
 					{
 						Monitor.Wait(_lockObject);
+					}
+
+					if (_queue.Count == 0)
+					{
+						continue;
 					}
 
 					item = _queue.Dequeue();

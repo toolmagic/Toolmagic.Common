@@ -35,9 +35,9 @@ namespace Toolmagic.Common.Test.Collections
 
 			using (var queue = ProducerConsumerQueue<int>.Start(value =>
 			{
+				Thread.Sleep(producerDelay);
 				processedItems.Add(value);
 				System.Console.WriteLine(value);
-				Thread.Sleep(producerDelay);
 			}))
 			{
 				Parallel.ForEach
@@ -52,7 +52,7 @@ namespace Toolmagic.Common.Test.Collections
 						}
 					);
 
-				Thread.Sleep(500);
+				Thread.Sleep(initialItemCount*consumerDelay);
 				queue.Shutdown();
 			}
 
