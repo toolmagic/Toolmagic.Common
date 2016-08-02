@@ -83,6 +83,7 @@
     <Compile Include="Collections\LimitedBlockingQueueTestSuite.cs" />
     <Compile Include="Collections\MultiKeyDictionaryTestSuite.cs" />
     <Compile Include="Collections\PriorityQueueTestSuite.cs" />
+    <Compile Include="Collections\ProducerConsumerQueueTestSuite.cs" />
     <Compile Include="Console\ArgumentBuilderTestSuite.cs" />
     <Compile Include="Console\CommandListTestSuite.cs" />
     <Compile Include="DisposableTestSuite.cs" />

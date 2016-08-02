@@ -61,6 +61,7 @@
     <Compile Include="Collections\IMultiKeyDictionary.cs" />
     <Compile Include="Collections\IProrityQueue.cs" />
     <Compile Include="Collections\MultiKeyDictionary.cs" />
+    <Compile Include="Collections\ProducerConsumerQueue.cs" />
     <Compile Include="Console\ArgumentBuilder.cs" />
     <Compile Include="Console\CommandList.cs" />
     <Compile Include="Console\EntryPoint.cs" />
