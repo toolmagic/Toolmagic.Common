@@ -20,7 +20,7 @@ namespace Toolmagic.Common
 
 			if (argumentValue.CompareTo(minValue) < 0 || argumentValue.CompareTo(maxValue) > 0)
 			{
-				throw new ArgumentOutOfRangeException(GetArgumentName(argumentName, "argumentValue"));
+				throw new ArgumentOutOfRangeException(GetArgumentName(argumentName, nameof(argumentValue)));
 			}
 		}
 
@@ -35,14 +35,14 @@ namespace Toolmagic.Common
 			{
 				if (expectedValue.CompareTo(actualValue) != 0)
 				{
-					throw new ArgumentException(GetArgumentName(argumentName, "argumentValue"));
+					throw new ArgumentException(GetArgumentName(argumentName, @"argumentValue"));
 				}
 				return;
 			}
 
 			if (actualValue != null && actualValue.CompareTo(expectedValue) != 0)
 			{
-				throw new ArgumentException(GetArgumentName(argumentName, "argumentValue"));
+				throw new ArgumentException(GetArgumentName(argumentName, @"argumentValue"));
 			}
 		}
 

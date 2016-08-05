@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.FormattableString;
 
 namespace Toolmagic.Common
 {
@@ -26,13 +27,13 @@ namespace Toolmagic.Common
 
 		public static NotEmpty<string> Create(string value, string argumentName = null)
 		{
-			var realArgumentName = Argument.GetArgumentName(argumentName, "value");
+			var realArgumentName = Argument.GetArgumentName(argumentName, nameof(value));
 
 			Argument.IsNotNull(value, realArgumentName);
 
 			if (string.IsNullOrWhiteSpace(value))
 			{
-				throw new ArgumentException($"Invalid '{realArgumentName}' argument value: {value}",
+				throw new ArgumentException(Invariant($"Invalid '{realArgumentName}' argument value: {value}"),
 					realArgumentName);
 			}
 

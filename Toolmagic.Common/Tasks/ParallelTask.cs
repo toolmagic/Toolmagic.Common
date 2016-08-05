@@ -10,16 +10,16 @@ namespace Toolmagic.Common.Tasks
 	{
 		public static async Task StartNew(IEnumerable<Action> actions)
 		{
-			var notNullActions = Argument.IsNotNull(actions, "actions");
-			Argument.IsInRange(notNullActions.Value.Count(), "actions", 2, int.MaxValue);
+			var notNullActions = Argument.IsNotNull(actions, nameof(actions));
+			Argument.IsInRange(notNullActions.Value.Count(), nameof(actions), 2, int.MaxValue);
 
 			await StartCore(notNullActions);
 		}
 
 		public static async Task StartNew(Action action, int parallelCount)
 		{
-			Argument.IsNotNull(action, "action");
-			Argument.IsInRange(parallelCount, "parallelCount", 2, int.MaxValue);
+			Argument.IsNotNull(action, nameof(action));
+			Argument.IsInRange(parallelCount, nameof(parallelCount), 2, int.MaxValue);
 
 			var actions = NotNull<IEnumerable<Action>>.Create(Enumerable.Repeat(action, parallelCount));
 

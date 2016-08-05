@@ -27,7 +27,7 @@ namespace Toolmagic.Common.Test.IO
 		public object IsDirectoryEmptyTest(string path, bool isDirectoryExists, IEnumerable<string> entries)
 		{
 			var fileSystem = MockRepository.GenerateStrictMock<IFileSystem>();
-			fileSystem.Stub(x => x.EnumerateFileSystemEntries(path, "*", SearchOption.AllDirectories)).Return(entries);
+			fileSystem.Stub(x => x.EnumerateFileSystemEntries(path, @"*", SearchOption.TopDirectoryOnly)).Return(entries);
 			fileSystem.Stub(x => x.DirectoryExists(path)).Return(isDirectoryExists);
 
 			try

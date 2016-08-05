@@ -13,7 +13,7 @@ namespace Toolmagic.Common
 
 		public T Finally(Action finallyAction)
 		{
-			Argument.IsNotNull(finallyAction, "finallyAction");
+			Argument.IsNotNull(finallyAction, nameof(finallyAction));
 
 			T result;
 			try

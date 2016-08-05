@@ -18,7 +18,7 @@ namespace Toolmagic.Common
 
 		public void Finally(Action finallyAction)
 		{
-			Argument.IsNotNull(finallyAction, "finallyAction");
+			Argument.IsNotNull(finallyAction, nameof(finallyAction));
 
 			Block
 				.Try(_tryFunc)

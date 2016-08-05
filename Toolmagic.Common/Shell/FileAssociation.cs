@@ -7,7 +7,7 @@ namespace Toolmagic.Common.Shell
 	{
 		public FileAssociation(string fileExtension)
 		{
-			Argument.IsNotEmpty(fileExtension, "FileAssociation");
+			Argument.IsNotEmpty(fileExtension, nameof(fileExtension));
 
 			FileExtension = fileExtension;
 			Commands = new Dictionary<string, string>();
@@ -20,7 +20,7 @@ namespace Toolmagic.Common.Shell
 
 		public static void Apply(FileAssociation fileAssociation)
 		{
-			Argument.IsNotNull(fileAssociation, "fileAssociation");
+			Argument.IsNotNull(fileAssociation, nameof(fileAssociation));
 
 			var fileAssociationRootKey =
 				Registry

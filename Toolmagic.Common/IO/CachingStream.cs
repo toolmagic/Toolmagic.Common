@@ -14,7 +14,7 @@ namespace Toolmagic.Common.IO
 
 		public CachingStream(Stream stream)
 		{
-			Argument.IsNotNull(stream, "stream");
+			Argument.IsNotNull(stream, nameof(stream));
 
 			_stream = stream;
 		}

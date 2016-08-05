@@ -24,7 +24,7 @@ namespace Toolmagic.Common
 		{
 			if (value == null)
 			{
-				throw new ArgumentNullException(Argument.GetArgumentName(argumentName, "value"));
+				throw new ArgumentNullException(Argument.GetArgumentName(argumentName, nameof(value)));
 			}
 
 			return new NotNull<T>(value);

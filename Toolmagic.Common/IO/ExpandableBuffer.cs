@@ -9,7 +9,7 @@ namespace Toolmagic.Common.IO
 
 		public ExpandableBuffer(double fillFactor = 0.9)
 		{
-			Argument.IsInRange(fillFactor, "fillFactor", 0.1, 1);
+			Argument.IsInRange(fillFactor, nameof(fillFactor), 0.1, 1);
 
 			_fillFactor = fillFactor;
 			_buffer = new byte[] {};
@@ -20,10 +20,10 @@ namespace Toolmagic.Common.IO
 
 		public int GetRange(int position, byte[] buffer, int offset, int count)
 		{
-			Argument.IsInRange(position, @"position", 0, Length - 1);
-			Argument.IsNotNull(buffer, @"buffer");
-			Argument.IsInRange(offset, @"offset", 0, int.MaxValue);
-			Argument.IsInRange(count, @"count", 1, int.MaxValue);
+			Argument.IsInRange(position, nameof(position), 0, Length - 1);
+			Argument.IsNotNull(buffer, nameof(buffer));
+			Argument.IsInRange(offset, nameof(offset), 0, int.MaxValue);
+			Argument.IsInRange(count, nameof(count), 1, int.MaxValue);
 
 			var readBytes = Math.Min(Length, position + count) - position;
 			Buffer.BlockCopy(_buffer, position, buffer, offset, readBytes);
@@ -32,8 +32,8 @@ namespace Toolmagic.Common.IO
 
 		public void AddRange(byte[] buffer, int count)
 		{
-			Argument.IsNotNull(buffer, @"buffer");
-			Argument.IsInRange(count, @"count", 1, buffer.Length);
+			Argument.IsNotNull(buffer, nameof(buffer));
+			Argument.IsInRange(count, nameof(count), 1, buffer.Length);
 
 			ExpandBuffer(Length + count);
 			Buffer.BlockCopy(buffer, 0, _buffer, Length, count);

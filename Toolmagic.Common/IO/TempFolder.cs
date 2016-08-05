@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using static System.FormattableString;
 
 namespace Toolmagic.Common.IO
 {
@@ -21,9 +22,9 @@ namespace Toolmagic.Common.IO
 		public static string GetTempFileName(IFileSystem fileSystem, string applicationKey, string fileExtension,
 			string fileNamePrefix = null)
 		{
-			Argument.IsNotNull(fileSystem, "fileSystem");
-			Argument.IsNotEmpty(applicationKey, "applicationKey");
-			Argument.IsNotEmpty(fileExtension, "fileExtension");
+			Argument.IsNotNull(fileSystem, nameof(fileSystem));
+			Argument.IsNotEmpty(applicationKey, nameof(applicationKey));
+			Argument.IsNotEmpty(fileExtension, nameof(fileExtension));
 
 			var rootApplicationFolder = Path.Combine(fileSystem.GetTempPath(), applicationKey);
 			if (!fileSystem.DirectoryExists(rootApplicationFolder))
@@ -31,10 +32,10 @@ namespace Toolmagic.Common.IO
 				fileSystem.CreateDirectory(rootApplicationFolder);
 			}
 
-			var fileName = Guid.NewGuid().ToString("N");
+			var fileName = Guid.NewGuid().ToString(@"N");
 			if (!string.IsNullOrWhiteSpace(fileNamePrefix))
 			{
-				fileName = $"{fileNamePrefix}-{fileName}";
+				fileName = Invariant($"{fileNamePrefix}-{fileName}");
 			}
 
 			return Path.Combine(rootApplicationFolder, Path.ChangeExtension(fileName, fileExtension));
@@ -47,8 +48,8 @@ namespace Toolmagic.Common.IO
 		/// <param name="applicationKey">Application key (actually it's sub-folder of temp directory).</param>
 		public static void CleanFolder(IFileSystem fileSystem, string applicationKey)
 		{
-			Argument.IsNotNull(fileSystem, "fileSystem");
-			Argument.IsNotEmpty(applicationKey, "applicationKey");
+			Argument.IsNotNull(fileSystem, nameof(fileSystem));
+			Argument.IsNotEmpty(applicationKey, nameof(applicationKey));
 
 			var rootApplicationFolder = Path.Combine(fileSystem.GetTempPath(), applicationKey);
 
@@ -58,7 +59,7 @@ namespace Toolmagic.Common.IO
 			}
 
 			var fileSystemEntries = fileSystem
-				.EnumerateFileSystemEntries(rootApplicationFolder, "*.*", SearchOption.AllDirectories)
+				.EnumerateFileSystemEntries(rootApplicationFolder, @"*.*", SearchOption.AllDirectories)
 				.OrderByDescending(f => f.Length);
 
 			foreach (var fileSystemEntry in fileSystemEntries)
@@ -76,7 +77,7 @@ namespace Toolmagic.Common.IO
 				}
 				catch (IOException t)
 				{
-					Trace.WriteLine($"{t.Message}\r\n{t.StackTrace}");
+					Trace.WriteLine(Invariant($"{t.Message}\r\n{t.StackTrace}"));
 				}
 			}
 		}

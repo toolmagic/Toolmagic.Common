@@ -7,17 +7,19 @@ namespace Toolmagic.Common.Collections
 	public sealed class ProducerConsumerQueue<T> : IDisposable
 	{
 		private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-		private readonly Action<T> _consumerAction;
-		private readonly Thread _consumerThread;
+		private readonly Action<T, CancellationToken> _consumerAction;
+		private readonly List<Thread> _consumerThreads = new List<Thread>();
 		private readonly object _lockObject = new object();
 		private readonly Queue<T> _queue = new Queue<T>();
 
-		private ProducerConsumerQueue(Action<T> consumerAction)
+		private ProducerConsumerQueue(Action<T, CancellationToken> consumerAction, int consumerCount)
 		{
-			Argument.IsNotNull(consumerAction, nameof(consumerAction));
-
 			_consumerAction = consumerAction;
-			_consumerThread = new Thread(Consume);
+
+			for (var i = 0; i < consumerCount; i++)
+			{
+				_consumerThreads.Add(new Thread(Consume));
+			}
 		}
 
 		public void Dispose()
@@ -25,16 +27,19 @@ namespace Toolmagic.Common.Collections
 			Shutdown();
 		}
 
-		public static ProducerConsumerQueue<T> Start(Action<T> consumerAction)
+		public static ProducerConsumerQueue<T> Start(Action<T, CancellationToken> consumerAction, int consumerCount)
 		{
-			var queue = new ProducerConsumerQueue<T>(consumerAction);
+			Argument.IsNotNull(consumerAction, nameof(consumerAction));
+			Argument.IsInRange(consumerCount, nameof(consumerCount), 1, int.MaxValue);
+
+			var queue = new ProducerConsumerQueue<T>(consumerAction, consumerCount);
 			queue.Start();
 			return queue;
 		}
 
 		private void Start()
 		{
-			_consumerThread.Start();
+			_consumerThreads.ForEach(thread => thread.Start());
 		}
 
 		public void Shutdown()
@@ -43,10 +48,10 @@ namespace Toolmagic.Common.Collections
 
 			lock (_lockObject)
 			{
-				Monitor.Pulse(_lockObject);
+				Monitor.PulseAll(_lockObject);
 			}
 
-			_consumerThread.Join();
+			_consumerThreads.ForEach(thread => thread.Join());
 		}
 
 		public void Enqueue(T item)
@@ -54,7 +59,7 @@ namespace Toolmagic.Common.Collections
 			lock (_lockObject)
 			{
 				_queue.Enqueue(item);
-				Monitor.Pulse(_lockObject);
+				Monitor.PulseAll(_lockObject);
 			}
 		}
 
@@ -83,7 +88,7 @@ namespace Toolmagic.Common.Collections
 					return;
 				}
 
-				_consumerAction.Invoke(item);
+				_consumerAction.Invoke(item, _cancellationTokenSource.Token);
 			}
 		}
 	}
