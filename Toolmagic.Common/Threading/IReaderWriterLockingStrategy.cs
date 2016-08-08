@@ -5,6 +5,8 @@
 		ReadWritePriority Priority { get; }
 		void EnterReadLock();
 		void ExitReadLock();
+		void EnterUpgradeableReadLock();
+		void ExitUpgradeableReadLock();
 		void EnterWriteLock();
 		void ExitWriteLock();
 	}

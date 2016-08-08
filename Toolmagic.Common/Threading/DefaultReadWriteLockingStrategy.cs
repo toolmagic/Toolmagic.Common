@@ -19,6 +19,11 @@ namespace Toolmagic.Common.Threading
 			_rwLock.EnterReadLock();
 		}
 
+		public void EnterUpgradeableReadLock()
+		{
+			_rwLock.EnterUpgradeableReadLock();
+		}
+
 		public void EnterWriteLock()
 		{
 			_rwLock.EnterWriteLock();
@@ -27,6 +32,11 @@ namespace Toolmagic.Common.Threading
 		public void ExitReadLock()
 		{
 			_rwLock.ExitReadLock();
+		}
+
+		public void ExitUpgradeableReadLock()
+		{
+			_rwLock.ExitUpgradeableReadLock();
 		}
 
 		public void ExitWriteLock()

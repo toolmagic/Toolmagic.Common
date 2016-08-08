@@ -31,6 +31,16 @@ namespace Toolmagic.Common.Threading
 			_lockingStrategy.Value.EnterReadLock();
 		}
 
+		public void EnterUpgradeableReadLock()
+		{
+			_lockingStrategy.Value.EnterUpgradeableReadLock();
+		}
+
+		public void ExitUpgradeableReadLock()
+		{
+			_lockingStrategy.Value.ExitUpgradeableReadLock();
+		}
+
 		public void ExitReadLock()
 		{
 			_lockingStrategy.Value.ExitReadLock();

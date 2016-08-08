@@ -75,12 +75,15 @@
     <Compile Include="FinallyBlockGeneric.cs" />
     <Compile Include="IO\CachingStream.cs" />
     <Compile Include="IO\ExpandableBuffer.cs" />
+    <Compile Include="IO\FileEntryNotFoundException.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="IO\FileSystemExtensions.cs" />
     <Compile Include="IO\IConsole.cs" />
     <Compile Include="IO\IFileSystem.cs" />
     <Compile Include="IO\SystemConsole.cs" />
     <Compile Include="IO\TempFolder.cs" />
+    <Compile Include="ManagedDisposable.cs" />
+    <Compile Include="MixedDisposable.cs" />
     <Compile Include="NotEmpty.cs" />
     <Compile Include="NotNull.cs" />
     <Compile Include="Presentation\MultiValueConverter.cs" />
